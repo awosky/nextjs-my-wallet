@@ -1,95 +1,70 @@
-import { measureTextWidth, Pie } from "@ant-design/plots";
+import { Pie } from "@ant-design/plots";
 
 import style from "./PieChart.module.scss";
 
 const PieChart = () => {
-  function renderStatistic(containerWidth: number, text: string, style: any) {
-    const { width: textWidth, height: textHeight } = measureTextWidth(
-      text,
-      style
-    );
-    const R = containerWidth / 2;
-    let scale = 1;
-    if (containerWidth < textWidth) {
-      scale = Math.min(
-        Math.sqrt(
-          Math.abs(
-            Math.pow(R, 2) /
-              (Math.pow(textWidth / 2, 2) + Math.pow(textHeight, 2))
-          )
-        ),
-        1
-      );
-    }
-    const textStyleStr = `width:${containerWidth}px;`;
-    return `<div style="${textStyleStr};font-size:${scale}em;line-height:${
-      scale < 1 ? 1 : "inherit"
-    };">${text}</div>`;
-  }
+  const formatter = new Intl.NumberFormat("en-US");
 
   const data = [
     {
-      type: "Zakat",
-      value: 27,
+      category: "Zakat",
+      value: 27000,
     },
     {
-      type: "Family",
-      value: 25,
+      category: "Family",
+      value: 25000,
     },
     {
-      type: "Wallet",
-      value: 18,
+      category: "Wallet",
+      value: 18000,
     },
     {
-      type: "Investment",
-      value: 15,
+      category: "Investment",
+      value: 15000,
     },
     {
-      type: "Financial Expense",
-      value: 10,
+      category: "Financial Expense",
+      value: 10000,
     },
     {
-      type: "Other",
-      value: 5,
+      category: "Other",
+      value: 5000,
     },
   ];
 
   const config = {
-    appendPadding: 40,
     data,
+    colorField: "category",
     angleField: "value",
-    colorField: "type",
-    radius: 1,
+    radius: 100,
     innerRadius: 0.6,
-    meta: {
-      value: {
-        formatter: (v: number) => `Rp. ${v}`,
-      },
+    tooltip: {
+      formatter: (data: any) => ({
+        name: `${data.category} `,
+        value: `Rp.${formatter.format(data.value)}`,
+      }),
     },
+    label: { formatter: (data: any) => `Rp.${formatter.format(data.value)}` },
     statistic: {
-      title: {
-        customHtml: (container: any, view: any, datum: any) => {
-          const { width, height } = container.getBoundingClientRect();
-          const d = Math.sqrt(Math.pow(width / 2, 2) + Math.pow(height / 2, 2));
-          const text = datum ? datum.type : "Expenses";
-          return renderStatistic(d, text, { fontSize: 28 });
-        },
-      },
+      title: { content: "Total Expense", style: { fontSize: "14px" } },
       content: {
-        style: { fontSize: "32px" },
-        customHtml: (container: any, view: any, datum: any, data: any) => {
-          const { width } = container.getBoundingClientRect();
-          const text = datum
-            ? `Rp.${datum.value}`
-            : `Rp.${data.reduce((r: number, d: any) => r + d.value, 0)}`;
-          return renderStatistic(width, text, { fontSize: 32 });
+        style: { fontSize: "16px", marginTop: "4px" },
+        customHtml: (_container: any, _: any, datum: any, data: any) => {
+          const value = datum
+            ? datum.value
+            : data?.reduce((r: any, d: any) => r + d.value, 0);
+          return `Rp.${formatter.format(value)}`;
         },
       },
     },
   };
+
   return (
     <div className={style.piechart}>
-      <Pie {...config} />
+      <Pie
+        {...config}
+        legend={{ position: "bottom", flipPage: false, itemSpacing: 10 }}
+      />
     </div>
   );
 };

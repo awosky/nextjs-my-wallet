@@ -1,0 +1,20 @@
+.balance {
+  background: #fff;
+  text-align: center;
+
+  .text {
+    margin-bottom: 4px;
+  }
+
+  .value {
+    margin-top: 0 !important;
+    margin-bottom: 0;
+  }
+
+  .divider {
+    margin: 24px auto 0;
+    width: 90%;
+    min-width: 80%;
+    margin-bottom: 0;
+  }
+}

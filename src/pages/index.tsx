@@ -1,7 +1,9 @@
 import Head from "next/head";
 
+import Balance from "@/components/Balance";
 import Navbar from "@/components/Navbar";
 import PieChart from "@/components/PieChart";
+import Transaction from "@/components/Transaction";
 
 export default function Home() {
   return (
@@ -17,7 +19,9 @@ export default function Home() {
       </Head>
       <main>
         <Navbar />
+        <Balance />
         <PieChart />
+        <Transaction />
       </main>
     </>
   );
