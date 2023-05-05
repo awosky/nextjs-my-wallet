@@ -1,50 +1,33 @@
 import { Pie } from "@ant-design/plots";
+import { useEffect, useState } from "react";
+
+import { CATEGOTY_PROPERTIES } from "@/constants/global";
+import { formatCurrency } from "@/utils/formatter";
 
 import style from "./PieChart.module.scss";
 
-const PieChart = () => {
-  const formatter = new Intl.NumberFormat("en-US");
+interface Props {
+  expense: [];
+}
 
-  const data = [
-    {
-      category: "Zakat",
-      value: 27000,
-    },
-    {
-      category: "Family",
-      value: 25000,
-    },
-    {
-      category: "Wallet",
-      value: 18000,
-    },
-    {
-      category: "Investment",
-      value: 15000,
-    },
-    {
-      category: "Financial Expense",
-      value: 10000,
-    },
-    {
-      category: "Other",
-      value: 5000,
-    },
-  ];
+const PieChart = (props: Props) => {
+  const { expense } = props;
+  const isExist = expense.length > 0;
+  const initialData = isExist ? expense : [{ value: 0 }];
+  const [data, setData] = useState(initialData);
+
+  useEffect(() => {
+    if (isExist) setData(expense);
+  }, [expense, isExist]);
 
   const config = {
     data,
     colorField: "category",
     angleField: "value",
+    color: ({ category }: any) =>
+      (CATEGOTY_PROPERTIES as any)[category]?.color || "#6395F9",
     radius: 100,
     innerRadius: 0.6,
-    tooltip: {
-      formatter: (data: any) => ({
-        name: `${data.category} `,
-        value: `Rp.${formatter.format(data.value)}`,
-      }),
-    },
-    label: { formatter: (data: any) => `Rp.${formatter.format(data.value)}` },
     statistic: {
       title: { content: "Total Expense", style: { fontSize: "14px" } },
       content: {
@@ -53,7 +36,7 @@ const PieChart = () => {
           const value = datum
             ? datum.value
             : data?.reduce((r: any, d: any) => r + d.value, 0);
-          return `Rp.${formatter.format(value)}`;
+          return formatCurrency(value, true);
         },
       },
     },
@@ -63,7 +46,14 @@ const PieChart = () => {
     <div className={style.piechart}>
       <Pie
         {...config}
+        tooltip={false}
         legend={{ position: "bottom", flipPage: false, itemSpacing: 10 }}
+        interactions={[{ type: "element-selected", enable: false }]}
+        label={
+          data.length > 1
+            ? { formatter: (data: any) => formatCurrency(data.value, true) }
+            : false
+        }
       />
     </div>
   );

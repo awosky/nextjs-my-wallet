@@ -1,0 +1,40 @@
+.modal {
+  div[class~="ant-modal-header"] {
+    margin-bottom: 24px;
+  }
+
+  .form {
+    .type,
+    .date,
+    .category,
+    .amount {
+      width: 100%;
+    }
+
+    .type {
+      .button {
+        width: 50%;
+        text-align: center;
+
+        &.expense {
+          &[class~="ant-radio-button-wrapper-checked"] {
+            background: #f6144a;
+            border-color: #f6144a;
+
+            &:before {
+              background: #f6144a;
+            }
+          }
+        }
+      }
+    }
+
+    .submit {
+      text-align: center;
+      button {
+        margin-top: 8px;
+        border-radius: 20px;
+      }
+    }
+  }
+}

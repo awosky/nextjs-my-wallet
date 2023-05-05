@@ -1,17 +1,26 @@
 import "@/styles/globals.scss";
 
-import { Roboto } from "@next/font/google";
+import { ConfigProvider } from "antd";
 import type { AppProps } from "next/app";
 
-const roboto = Roboto({
-  weight: "400",
-  subsets: ["latin"],
-});
+import SyncProvider from "@/providers/SyncProvider";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <div className={roboto.className}>
-      <Component {...pageProps} />
-    </div>
+    <>
+      <ConfigProvider
+        theme={{
+          token: {
+            fontFamily: "Open Sans",
+            colorPrimary: "#6395F9",
+            colorPrimaryBorder: "#6395F9",
+          },
+        }}
+      >
+        <SyncProvider>
+          <Component {...pageProps} />
+        </SyncProvider>
+      </ConfigProvider>
+    </>
   );
 }

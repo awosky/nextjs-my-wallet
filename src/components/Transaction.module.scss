@@ -4,6 +4,21 @@
   border-top-right-radius: 24px;
   margin: 24px auto 0;
   padding: 16px;
-  /* height: 100vh; */
-  /* overflow: auto; */
+
+  .date {
+    margin-bottom: 0;
+  }
+
+  .income,
+  .expense {
+    font-weight: 500;
+  }
+
+  .income {
+    color: #29cc90;
+  }
+
+  .expense {
+    color: #f6144a;
+  }
 }
