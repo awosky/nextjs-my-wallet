@@ -3,6 +3,7 @@ import "@/styles/globals.scss";
 import { ConfigProvider } from "antd";
 import type { AppProps } from "next/app";
 
+import CategoryProvider from "@/providers/CategoryProvider";
 import SyncProvider from "@/providers/SyncProvider";
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -18,7 +19,9 @@ export default function App({ Component, pageProps }: AppProps) {
         }}
       >
         <SyncProvider>
-          <Component {...pageProps} />
+          <CategoryProvider>
+            <Component {...pageProps} />
+          </CategoryProvider>
         </SyncProvider>
       </ConfigProvider>
     </>

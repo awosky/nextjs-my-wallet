@@ -1,10 +1,11 @@
 import * as AntdIcons from "@ant-design/icons";
 import { Avatar, List, Space, Typography } from "antd";
 import classNames from "classnames";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 
 import TransactionMenu from "@/components/TransactionMenu";
 import { CATEGOTY_PROPERTIES } from "@/constants/global";
+import { CategoryContext, defaultCategory } from "@/providers/CategoryProvider";
 import { formatCurrency } from "@/utils/formatter";
 
 import style from "./Transaction.module.scss";
@@ -16,6 +17,7 @@ interface Props {
 
 const Transaction = (props: Props) => {
   const { dates: syncDates, data: syncData } = props;
+  const { category } = useContext(CategoryContext);
   const [dates, setDates] = useState<any>(syncDates || []);
   const [data, setData] = useState<any>(syncData || []);
 
@@ -34,13 +36,23 @@ const Transaction = (props: Props) => {
       <Typography.Title level={4}>Transactions</Typography.Title>
       {dates.length > 0 ? (
         dates.map((v: any) => {
+          const filteredDataByDate = data.filter((d: any) => d.date === v);
+          const filteredDataByCategory = filteredDataByDate.filter(
+            (d: any) => d.category === category
+          );
+          const dataSource =
+            category === defaultCategory
+              ? filteredDataByDate
+              : filteredDataByCategory;
+
+          if (dataSource.length == 0) return null;
           return (
             <Fragment key={v}>
               <Typography.Paragraph className={style.date}>
                 {v}
               </Typography.Paragraph>
               <List
-                dataSource={data.filter((d: any) => d.date === v)}
+                dataSource={dataSource}
                 renderItem={(item: any, i: number) => (
                   <List.Item key={i}>
                     <List.Item.Meta
