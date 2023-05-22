@@ -40,7 +40,7 @@ const PieChart = (props: Props) => {
     statistic: {
       title: { content: category, style: { fontSize: "14px" } },
       content: {
-        style: { fontSize: "16px", marginTop: "4px" },
+        style: { fontSize: "14px", marginTop: "4px" },
         customHtml: (_container: any, _: any, datum: any, data: any) => {
           const filterData = data?.filter((d: any) => d.category === category);
           const customData = category === defaultCategory ? data : filterData;
