@@ -1,9 +1,10 @@
 import * as AntdIcons from "@ant-design/icons";
-import { Avatar, List, Space, Typography } from "antd";
+import { Avatar, Col, List, Row, Space, Typography } from "antd";
 import classNames from "classnames";
 import { Fragment, useContext, useEffect, useState } from "react";
 
 import TransactionMenu from "@/components/TransactionMenu";
+import TransactionMenuItem from "@/components/TransactionMenuItem";
 import { CATEGOTY_PROPERTIES } from "@/constants/global";
 import { CategoryContext, defaultCategory } from "@/providers/CategoryProvider";
 import { formatCurrency } from "@/utils/formatter";
@@ -20,6 +21,7 @@ const Transaction = (props: Props) => {
   const { category } = useContext(CategoryContext);
   const [dates, setDates] = useState<any>(syncDates || []);
   const [data, setData] = useState<any>(syncData || []);
+  const isDataExist = data.length > 0;
 
   useEffect(() => {
     setDates(syncDates);
@@ -33,8 +35,13 @@ const Transaction = (props: Props) => {
 
   return (
     <div className={style.transaction}>
-      <Typography.Title level={4}>Transactions</Typography.Title>
-      {dates.length > 0 ? (
+      <Row justify="space-between" align="middle" wrap={false}>
+        <Col>
+          <Typography.Title level={4}>Transactions</Typography.Title>
+        </Col>
+        <Col>{isDataExist && <TransactionMenu />}</Col>
+      </Row>
+      {isDataExist ? (
         dates.map((v: any) => {
           const filteredDataByDate = data.filter((d: any) => d.date === v);
           const filteredDataByCategory = filteredDataByDate.filter(
@@ -72,7 +79,7 @@ const Transaction = (props: Props) => {
                       description={item.description || "-"}
                     />
                     <Space direction="vertical" size={0} align="end">
-                      <TransactionMenu item={item} />
+                      <TransactionMenuItem item={item} />
                       <Typography.Text
                         className={classNames({
                           [style.income]: item.type === "income",

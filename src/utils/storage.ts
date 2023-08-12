@@ -30,6 +30,10 @@ export const deleteTransaction = (id: string | number) => {
   localStorage.setItem("transactions", JSON.stringify(newData));
 };
 
+export const deleteAllTransaction = () => {
+  localStorage.removeItem("transactions");
+};
+
 export const getTransactions = () => {
   const data = localStorage.getItem("transactions");
   return data ? JSON.parse(data) : [];

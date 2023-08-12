@@ -1,5 +1,5 @@
 import { Pie } from "@ant-design/plots";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 
 import { CATEGOTY_PROPERTIES } from "@/constants/global";
 import { CategoryContext, defaultCategory } from "@/providers/CategoryProvider";
@@ -13,14 +13,17 @@ interface Props {
 
 const PieChart = (props: Props) => {
   const { expense } = props;
-  const isExist = expense.length > 0;
-  const initialData = isExist ? expense : [{ value: 0 }];
+  const isDataExist = expense.length > 0;
+  const initialData = useMemo(
+    () => (isDataExist ? expense : [{ value: 0 }]),
+    [expense, isDataExist]
+  );
   const [data, setData] = useState(initialData);
   const { category, setCategory } = useContext(CategoryContext);
 
   useEffect(() => {
-    if (isExist) setData(expense);
-  }, [expense, isExist]);
+    isDataExist ? setData(expense) : setData(initialData);
+  }, [expense, initialData, isDataExist]);
 
   const config = {
     data,
