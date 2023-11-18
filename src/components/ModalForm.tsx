@@ -36,6 +36,7 @@ const ModalForm = (props: Props) => {
 
   useEffect(() => {
     if (item && open) {
+      setType(item.type);
       form.setFieldsValue({
         Type: item.type,
         Date: dayjs(item.date),
