@@ -141,10 +141,12 @@ const ModalForm = (props: Props) => {
           <Form.Item label="Amount" name="Amount" rules={[{ required: true }]}>
             <InputNumber
               min={0}
-              formatter={(v) => formatCurrency(v)}
+              formatter={(v) => (v ? formatCurrency(v) : "")}
               parser={(v: any) => v?.replace(/\$\s?|(\.*)/g, "")}
               className={style.amount}
+              controls={false}
               inputMode="numeric"
+              placeholder="0"
             />
           </Form.Item>
           <div className={style.submit}>
