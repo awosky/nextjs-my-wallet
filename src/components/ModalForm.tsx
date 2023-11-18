@@ -144,6 +144,7 @@ const ModalForm = (props: Props) => {
               formatter={(v) => formatCurrency(v)}
               parser={(v: any) => v?.replace(/\$\s?|(\.*)/g, "")}
               className={style.amount}
+              inputMode="numeric"
             />
           </Form.Item>
           <div className={style.submit}>
