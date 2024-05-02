@@ -1,20 +1,15 @@
-import {
-  DeleteOutlined,
-  EditOutlined,
-  ExclamationCircleFilled,
-  MoreOutlined,
-} from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, ExclamationCircleFilled, MoreOutlined } from "@ant-design/icons";
 import { Button, Dropdown, Modal } from "antd";
 import { useContext, useState } from "react";
 
 import ModalForm from "@/components/ModalForm";
 import { SyncContext } from "@/providers/SyncProvider";
-import { deleteTransaction } from "@/utils/storage";
+import { deleteTransaction, Transaction } from "@/utils/storage";
 
 import style from "./TransactionMenuItem.module.scss";
 
 interface Props {
-  item: any;
+  item: Transaction;
 }
 
 const TransactionMenuItem = (props: Props) => {
@@ -54,17 +49,8 @@ const TransactionMenuItem = (props: Props) => {
 
   return (
     <div className={style.menu}>
-      <Dropdown
-        menu={{ items: menuItems }}
-        placement="bottomRight"
-        trigger={["click"]}
-      >
-        <Button
-          className={style.more}
-          type="text"
-          size="small"
-          icon={<MoreOutlined />}
-        />
+      <Dropdown menu={{ items: menuItems }} placement="bottomRight" trigger={["click"]}>
+        <Button className={style.more} type="text" size="small" icon={<MoreOutlined />} />
       </Dropdown>
       <ModalForm open={open} setOpen={setOpen} item={item} />
     </div>

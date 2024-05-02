@@ -1,31 +1,19 @@
-import {
-  Button,
-  DatePicker,
-  Form,
-  Input,
-  InputNumber,
-  Modal,
-  Radio,
-  Select,
-} from "antd";
+import { Button, DatePicker, Form, Input, InputNumber, Modal, Radio, RadioChangeEvent, Select } from "antd";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import { useContext, useEffect, useState } from "react";
 
-import {
-  EXPENSE_CATEGORY_OPTIONS,
-  INCOME_CATEGORY_OPTIONS,
-} from "@/constants/global";
+import { EXPENSE_CATEGORY_OPTIONS, INCOME_CATEGORY_OPTIONS } from "@/constants/global";
 import { SyncContext } from "@/providers/SyncProvider";
 import { formatCurrency } from "@/utils/formatter";
-import { editTransaction, saveTransaction } from "@/utils/storage";
+import { editTransaction, saveTransaction, Transaction } from "@/utils/storage";
 
 import style from "./ModalForm.module.scss";
 
 interface Props {
   open: boolean;
   setOpen: (v: boolean) => void;
-  item?: any;
+  item?: Transaction;
 }
 
 const ModalForm = (props: Props) => {
@@ -52,7 +40,7 @@ const ModalForm = (props: Props) => {
     setOpen(false);
   };
 
-  const onChangeType = (e: any) => {
+  const onChangeType = (e: RadioChangeEvent) => {
     setType(e.target.value);
     form.setFieldValue("Category", null);
   };
@@ -74,66 +62,23 @@ const ModalForm = (props: Props) => {
 
   return (
     <div>
-      <Modal
-        className={style.modal}
-        title={`${item ? "Edit" : "Add"} Transaction`}
-        open={open}
-        onCancel={onCancel}
-        footer={false}
-        centered
-      >
-        <Form
-          className={style.form}
-          layout="vertical"
-          form={form}
-          onFinish={onFinish}
-          requiredMark={false}
-          autoComplete="off"
-        >
-          <Form.Item
-            label="Type"
-            name="Type"
-            initialValue={type}
-            rules={[{ required: true }]}
-          >
-            <Radio.Group
-              buttonStyle="solid"
-              onChange={onChangeType}
-              className={style.type}
-            >
+      <Modal className={style.modal} title={`${item ? "Edit" : "Add"} Transaction`} open={open} onCancel={onCancel} footer={false} centered>
+        <Form className={style.form} layout="vertical" form={form} onFinish={onFinish} requiredMark={false} autoComplete="off">
+          <Form.Item label="Type" name="Type" initialValue={type} rules={[{ required: true }]}>
+            <Radio.Group buttonStyle="solid" onChange={onChangeType} className={style.type}>
               <Radio.Button value="income" className={style.button}>
                 Income
               </Radio.Button>
-              <Radio.Button
-                value="expense"
-                className={classNames(style.button, style.expense)}
-              >
+              <Radio.Button value="expense" className={classNames(style.button, style.expense)}>
                 Expense
               </Radio.Button>
             </Radio.Group>
           </Form.Item>
-          <Form.Item
-            label="Date"
-            name="Date"
-            initialValue={dayjs()}
-            rules={[{ required: true }]}
-          >
+          <Form.Item label="Date" name="Date" initialValue={dayjs()} rules={[{ required: true }]}>
             <DatePicker format="DD MMM YYYY" className={style.date} />
           </Form.Item>
-          <Form.Item
-            label="Category"
-            name="Category"
-            rules={[{ required: true }]}
-          >
-            <Select
-              options={
-                type === "income"
-                  ? INCOME_CATEGORY_OPTIONS
-                  : EXPENSE_CATEGORY_OPTIONS
-              }
-              placeholder="Select Category"
-              className={style.category}
-            />
+          <Form.Item label="Category" name="Category" rules={[{ required: true }]}>
+            <Select options={type === "income" ? INCOME_CATEGORY_OPTIONS : EXPENSE_CATEGORY_OPTIONS} placeholder="Select Category" className={style.category} />
           </Form.Item>
           <Form.Item label="Description" name="Description">
             <Input placeholder="Add Description" />
@@ -142,7 +87,7 @@ const ModalForm = (props: Props) => {
             <InputNumber
               min={0}
               formatter={(v) => (v ? formatCurrency(v) : "")}
-              parser={(v: any) => v?.replace(/\$\s?|(\.*)/g, "")}
+              parser={(v: string | undefined) => v?.replace(/\$\s?|(\.*)/g, "") as number | string}
               className={style.amount}
               controls={false}
               inputMode="numeric"

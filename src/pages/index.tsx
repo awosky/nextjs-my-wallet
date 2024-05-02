@@ -7,12 +7,7 @@ import Navbar from "@/components/Navbar";
 import PieChart from "@/components/PieChart";
 import Transaction from "@/components/Transaction";
 import { SyncContext } from "@/providers/SyncProvider";
-import {
-  getDates,
-  getFilteredExpense,
-  getTotalBalance,
-  getTransactions,
-} from "@/utils/storage";
+import { getDates, getExpenseTransactions, getTotalBalance, getTransactions } from "@/utils/storage";
 
 export default function Home() {
   const { sync, setSync } = useContext(SyncContext);
@@ -22,7 +17,6 @@ export default function Home() {
     transactions: [],
     expenses: [],
   });
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!sync) {
@@ -30,18 +24,14 @@ export default function Home() {
         balance: getTotalBalance(),
         dates: getDates(),
         transactions: getTransactions(),
-        expenses: getFilteredExpense(),
+        expenses: getExpenseTransactions(),
       });
 
       setSync(true);
     }
   }, [setSync, sync]);
 
-  useEffect(() => {
-    if (loading) setLoading(false);
-  }, []);
-
-  if (loading) return <Loading />;
+  if (!sync) return <Loading />;
 
   return (
     <>

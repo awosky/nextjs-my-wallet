@@ -11,11 +11,7 @@ const CategoryProvider = ({ children }: { children: JSX.Element }) => {
   const [category, setCategory] = useState<string>(defaultCategory);
   const value = useMemo(() => ({ category, setCategory }), [category]);
 
-  return (
-    <CategoryContext.Provider value={value}>
-      {children}
-    </CategoryContext.Provider>
-  );
+  return <CategoryContext.Provider value={value}>{children}</CategoryContext.Provider>;
 };
 
 export default CategoryProvider;

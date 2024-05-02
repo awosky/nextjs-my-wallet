@@ -5,22 +5,23 @@ import { Fragment, useContext, useEffect, useState } from "react";
 
 import TransactionMenu from "@/components/TransactionMenu";
 import TransactionMenuItem from "@/components/TransactionMenuItem";
-import { CATEGOTY_PROPERTIES } from "@/constants/global";
+import { CategoryProperties, CATEGOTY_PROPERTIES } from "@/constants/global";
 import { CategoryContext, defaultCategory } from "@/providers/CategoryProvider";
 import { formatCurrency } from "@/utils/formatter";
+import { Transaction } from "@/utils/storage";
 
 import style from "./Transaction.module.scss";
 
 interface Props {
-  dates: [];
-  data: [];
+  dates: string[];
+  data: Transaction[];
 }
 
-const Transaction = (props: Props) => {
+const Transactions = (props: Props) => {
   const { dates: syncDates, data: syncData } = props;
   const { category } = useContext(CategoryContext);
-  const [dates, setDates] = useState<any>(syncDates || []);
-  const [data, setData] = useState<any>(syncData || []);
+  const [dates, setDates] = useState<string[]>(syncDates || []);
+  const [data, setData] = useState<Transaction[]>(syncData || []);
   const isDataExist = data.length > 0;
 
   useEffect(() => {
@@ -42,37 +43,26 @@ const Transaction = (props: Props) => {
         <Col>{isDataExist && <TransactionMenu />}</Col>
       </Row>
       {isDataExist ? (
-        dates.map((v: any) => {
-          const filteredDataByDate = data.filter((d: any) => d.date === v);
-          const filteredDataByCategory = filteredDataByDate.filter(
-            (d: any) => d.category === category
-          );
-          const dataSource =
-            category === defaultCategory
-              ? filteredDataByDate
-              : filteredDataByCategory;
+        dates.map((v) => {
+          const filteredDataByDate = data.filter((d) => d.date === v);
+          const filteredDataByDateAndCategory = filteredDataByDate.filter((d) => d.category === category);
+          const dataSource = category === defaultCategory ? filteredDataByDate : filteredDataByDateAndCategory;
 
           if (dataSource.length == 0) return null;
           return (
             <Fragment key={v}>
-              <Typography.Paragraph className={style.date}>
-                {v}
-              </Typography.Paragraph>
+              <Typography.Paragraph className={style.date}>{v}</Typography.Paragraph>
               <List
                 dataSource={dataSource}
-                renderItem={(item: any, i: number) => (
+                renderItem={(item: Transaction, i: number) => (
                   <List.Item key={i}>
                     <List.Item.Meta
                       avatar={
                         <Avatar
                           style={{
-                            backgroundColor: (CATEGOTY_PROPERTIES as any)[
-                              item.category
-                            ]?.color,
+                            backgroundColor: (CATEGOTY_PROPERTIES as CategoryProperties)[item.category]?.color,
                           }}
-                          icon={getIcon(
-                            (CATEGOTY_PROPERTIES as any)[item.category]?.icon
-                          )}
+                          icon={getIcon((CATEGOTY_PROPERTIES as CategoryProperties)[item.category]?.icon)}
                         />
                       }
                       title={item.category}
@@ -103,4 +93,4 @@ const Transaction = (props: Props) => {
   );
 };
 
-export default Transaction;
+export default Transactions;

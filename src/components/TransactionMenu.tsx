@@ -1,8 +1,4 @@
-import {
-  DeleteOutlined,
-  ExclamationCircleFilled,
-  MoreOutlined,
-} from "@ant-design/icons";
+import { DeleteOutlined, ExclamationCircleFilled, MoreOutlined } from "@ant-design/icons";
 import { Button, Dropdown, Modal } from "antd";
 import { useContext } from "react";
 
@@ -37,17 +33,8 @@ const TransactionMenu = () => {
   ];
 
   return (
-    <Dropdown
-      menu={{ items: menuItems }}
-      placement="bottomRight"
-      trigger={["click"]}
-    >
-      <Button
-        className={style.menu}
-        type="text"
-        size="small"
-        icon={<MoreOutlined />}
-      />
+    <Dropdown menu={{ items: menuItems }} placement="bottomRight" trigger={["click"]}>
+      <Button className={style.menu} type="text" size="small" icon={<MoreOutlined />} />
     </Dropdown>
   );
 };

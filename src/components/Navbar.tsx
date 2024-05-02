@@ -11,30 +11,15 @@ const Navbar = () => {
 
   return (
     <>
-      <Row
-        className={style.navbar}
-        justify="space-between"
-        align="middle"
-        wrap={false}
-      >
+      <Row className={style.navbar} justify="space-between" align="middle" wrap={false}>
         <Col span={4}>
-          <Image
-            width={32}
-            height={32}
-            alt="logo"
-            src="/images/logo.png"
-            className={style.logo}
-          />
+          <Image width={32} height={32} alt="logo" src="/images/logo.png" className={style.logo} />
         </Col>
         <Col span={16}>
           <Typography.Title level={1}> My Wallet </Typography.Title>
         </Col>
         <Col span={4}>
-          <Button
-            onClick={() => setOpen(true)}
-            icon={<PlusCircleTwoTone twoToneColor={"#6395F9"} />}
-            type="text"
-          />
+          <Button onClick={() => setOpen(true)} icon={<PlusCircleTwoTone twoToneColor={"#6395F9"} />} type="text" />
         </Col>
       </Row>
       <ModalForm open={open} setOpen={setOpen} />

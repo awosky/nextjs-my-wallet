@@ -1,32 +1,29 @@
 import dayjs from "dayjs";
 
 export interface Transaction {
-  id: string | number;
-  type: string;
+  id: number;
+  type: TransactionType;
   date: string;
   category: string;
   description: string;
-  amount: string | number;
+  amount: number;
 }
 
+type TransactionType = "expense" | "income";
+
 export const saveTransaction = (newTransaction: Transaction) => {
-  localStorage.setItem(
-    "transactions",
-    JSON.stringify([...getTransactions(), newTransaction])
-  );
+  localStorage.setItem("transactions", JSON.stringify([...getTransactions(), newTransaction]));
 };
 
 export const editTransaction = (newTransaction: Transaction) => {
-  const data = getTransactions();
-  const newData = data.map((v: Transaction) => {
+  const newData = getTransactions().map((v: Transaction) => {
     return v.id === newTransaction.id ? newTransaction : v;
   });
   localStorage.setItem("transactions", JSON.stringify(newData));
 };
 
 export const deleteTransaction = (id: string | number) => {
-  const data = getTransactions();
-  const newData = data.filter((v: Transaction) => v.id !== id);
+  const newData = getTransactions().filter((v: Transaction) => v.id !== id);
   localStorage.setItem("transactions", JSON.stringify(newData));
 };
 
@@ -34,45 +31,29 @@ export const deleteAllTransaction = () => {
   localStorage.removeItem("transactions");
 };
 
-export const getTransactions = () => {
-  const data = localStorage.getItem("transactions");
-  return data ? JSON.parse(data) : [];
+export const getTransactions = (): Transaction[] => {
+  const transactionsData = localStorage.getItem("transactions");
+  const transactions: Transaction[] = transactionsData ? JSON.parse(transactionsData) : [];
+  return transactions.sort((a, b) => dayjs(b.id).diff(dayjs(a.id)));
 };
 
-export const getDates = () => {
-  const dates = new Set();
-  getTransactions().map((v: any) => dates.add(v.date));
-  const arrayDates = Array.from(dates);
-  arrayDates.sort((a: any, b: any) => dayjs(b).diff(dayjs(a)));
-  return arrayDates ? arrayDates : [];
+export const getDates = (): string[] => {
+  const dates = new Set<string>(getTransactions().map((v: Transaction) => v.date));
+  return Array.from(dates).sort((a: string, b: string) => dayjs(b).diff(dayjs(a)));
 };
 
-export const getTotalBalance = () => {
-  return (
-    getTransactions()?.reduce((v: any, t: any) => {
-      if (t.type === "income") return v + t.amount;
-      return v - t.amount;
-    }, 0) || 0
-  );
+export const getTotalBalance = (): number => {
+  return getTransactions().reduce((a, v) => (v.type === "income" ? a + v.amount : a - v.amount), 0);
 };
 
-export const getFilteredExpense = () => {
+export const getExpenseTransactions = (): Transaction[] => {
   return getTransactions()
-    ?.filter((v: any) => v.type === "expense")
-    ?.reduce((a: any, v: any) => {
-      if (a.find((a1: any) => a1.category === v.category)) {
-        return a.map((a2: any) =>
-          a2.category === v.category
-            ? { category: v.category, value: a2.value + v.amount }
-            : a2
-        );
+    .filter((v) => v.type === "expense")
+    .reduce((a: Transaction[], v: Transaction) => {
+      if (a.find((v1: Transaction) => v1.category === v.category)) {
+        return a.map((v2: Transaction) => (v2.category === v.category ? { ...v2, amount: v2.amount + v.amount } : v2));
+      } else {
+        return [...a, { ...v, category: v.category, amount: v.amount }];
       }
-      return [
-        ...a,
-        {
-          category: v.category,
-          value: v.amount,
-        },
-      ];
     }, []);
 };
