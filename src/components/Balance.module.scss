@@ -2,13 +2,41 @@
   background: #fff;
   text-align: center;
 
-  .text {
-    margin-bottom: 4px;
-  }
+  .card {
+    border: unset;
+    box-shadow: none;
 
-  .value {
-    margin-top: 0 !important;
-    margin-bottom: 0;
+    div[class~="ant-card-body"] {
+      @media screen and (max-width: 450px) {
+        padding: 20px 8px;
+      }
+
+      div[class~="ant-statistic-title"] {
+        @media screen and (max-width: 768px) {
+          margin-bottom: 0;
+        }
+
+        @media screen and (max-width: 450px) {
+          font-size: 14px;
+        }
+      }
+
+      span {
+        @media screen and (max-width: 768px) {
+          font-size: 20px;
+        }
+
+        @media screen and (max-width: 450px) {
+          font-size: 16px;
+        }
+      }
+
+      .income {
+        span {
+          color: #3f8600;
+        }
+      }
+    }
   }
 
   .divider {

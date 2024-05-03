@@ -7,11 +7,12 @@ import Navbar from "@/components/Navbar";
 import PieChart from "@/components/PieChart";
 import Transaction from "@/components/Transaction";
 import { SyncContext } from "@/providers/SyncProvider";
-import { getDates, getExpenseTransactions, getTotalBalance, getTransactions } from "@/utils/storage";
+import { getDates, getExpenseTransactions, getTotalBalance, getTotalIncome, getTransactions } from "@/utils/storage";
 
 export default function Home() {
   const { sync, setSync } = useContext(SyncContext);
   const [data, setData] = useState<any>({
+    income: 0,
     balance: 0,
     dates: [],
     transactions: [],
@@ -21,6 +22,7 @@ export default function Home() {
   useEffect(() => {
     if (!sync) {
       setData({
+        income: getTotalIncome(),
         balance: getTotalBalance(),
         dates: getDates(),
         transactions: getTransactions(),
@@ -46,7 +48,7 @@ export default function Home() {
       </Head>
       <main>
         <Navbar />
-        <Balance balance={data.balance} />
+        <Balance income={data.income} balance={data.balance} />
         <PieChart expense={data.expenses} />
         <Transaction dates={data.dates} data={data.transactions} />
       </main>

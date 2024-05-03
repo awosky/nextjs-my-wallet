@@ -42,6 +42,10 @@ export const getDates = (): string[] => {
   return Array.from(dates).sort((a: string, b: string) => dayjs(b).diff(dayjs(a)));
 };
 
+export const getTotalIncome = (): number => {
+  return getTransactions().reduce((a, v) => (v.type === "income" ? a + v.amount : a), 0);
+};
+
 export const getTotalBalance = (): number => {
   return getTransactions().reduce((a, v) => (v.type === "income" ? a + v.amount : a - v.amount), 0);
 };
