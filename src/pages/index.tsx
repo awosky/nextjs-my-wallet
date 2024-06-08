@@ -29,7 +29,7 @@ export default function Home() {
         expenses: getExpenseTransactions(),
       });
 
-      setSync(true);
+      setTimeout(() => setSync(true), 500);
     }
   }, [setSync, sync]);
 
