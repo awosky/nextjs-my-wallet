@@ -55,6 +55,7 @@ const PieChart = (props: Props) => {
     <div className={style.piechart}>
       <Pie
         {...config}
+        animation={{ appear: { animation: "fadeIn" } }}
         tooltip={false}
         legend={{ position: "bottom", flipPage: false, itemSpacing: 10 }}
         interactions={[
