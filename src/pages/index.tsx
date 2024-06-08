@@ -33,8 +33,6 @@ export default function Home() {
     }
   }, [setSync, sync]);
 
-  if (!sync) return <Loading />;
-
   return (
     <>
       <Head>
@@ -47,10 +45,12 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <Navbar />
-        <Balance income={data.income} balance={data.balance} />
-        <PieChart expense={data.expenses} />
-        <Transaction dates={data.dates} data={data.transactions} />
+        <Loading isLoading={!sync}>
+          <Navbar />
+          <Balance income={data.income} balance={data.balance} />
+          <PieChart expense={data.expenses} />
+          <Transaction dates={data.dates} data={data.transactions} />
+        </Loading>
       </main>
     </>
   );

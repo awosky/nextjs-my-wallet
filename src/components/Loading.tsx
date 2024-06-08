@@ -2,11 +2,23 @@ import { Spin } from "antd";
 
 import style from "./Loading.module.scss";
 
-const Loading = () => {
+interface Props {
+  isLoading: boolean;
+  children: any;
+}
+
+const Loading = (props: Props) => {
+  const { isLoading, children } = props;
+
   return (
-    <div className={style.loading}>
-      <Spin />
-    </div>
+    <>
+      {isLoading && (
+        <div className={style.loading}>
+          <Spin />
+        </div>
+      )}
+      {children}
+    </>
   );
 };
 
