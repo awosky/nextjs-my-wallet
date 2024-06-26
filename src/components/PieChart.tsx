@@ -19,7 +19,7 @@ const PieChart = (props: Props) => {
   const { category, setCategory } = useContext(CategoryContext);
 
   useEffect(() => {
-    if (expenseData.length > 0) setData(expenseData);
+    if (data.length > 0 || expenseData.length > 0) setData(expenseData);
   }, [expenseData]);
 
   const config = {
