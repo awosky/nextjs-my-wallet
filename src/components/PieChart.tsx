@@ -77,7 +77,7 @@ const PieChart = (props: Props) => {
           { type: "legend-filter", enable: false },
           { type: "legend-active", enable: false },
         ]}
-        label={data.length > 1 ? { formatter: (data) => formatCurrency(data.value, true) } : false}
+        label={data?.length > 1 ? { formatter: (data) => formatCurrency(data.value, true) } : false}
       />
     </div>
   );
