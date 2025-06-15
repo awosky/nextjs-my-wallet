@@ -14,13 +14,18 @@ interface Props {
 
 const PieChart = (props: Props) => {
   const expenseData = useMemo(() => props.expense.map((v) => ({ category: v.category, value: v.amount })), [props.expense]);
-  const initialData = useMemo(() => (expenseData.length > 0 ? expenseData : [{ value: 0 }]), [expenseData]);
+  const defaultData = useMemo(() => [{ value: 0 }], []);
+  const initialData = useMemo(() => (expenseData.length > 0 ? expenseData : defaultData), [defaultData, expenseData]);
   const [data, setData] = useState(initialData);
   const { category, setCategory } = useContext(CategoryContext);
 
   useEffect(() => {
-    if (data.length > 0 || expenseData.length > 0) setData(expenseData);
-  }, [expenseData]);
+    if (expenseData.length > 0) {
+      setData(expenseData);
+    } else {
+      setData(defaultData);
+    }
+  }, [defaultData, expenseData]);
 
   const config = {
     data,
