@@ -35,7 +35,14 @@ const BarChart = (props: Props) => {
     <div className={style.barchart}>
       <Bar
         {...config}
-        label={{ formatter: (d) => formatCurrency(d.value, true) }}
+        label={{
+          formatter: (d) => formatCurrency(d.value, true),
+          position: (d) => {
+            const max = Math.max(...data.map((obj) => obj.value)) / 2;
+            return d.value < max ? "right" : "middle";
+          },
+        }}
+        tooltip={false}
         xAxis={false}
         color={(d) => (CATEGOTY_PROPERTIES as CategoryProperties)[formatNewLineToSpace(d.category)]?.color}
         barWidthRatio={1}
