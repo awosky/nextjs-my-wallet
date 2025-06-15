@@ -1,0 +1,16 @@
+.barchart {
+  width: 100%;
+  min-height: 425px;
+  padding-left: 16px;
+  padding-right: 16px;
+  overflow: hidden;
+  background: #fff;
+  padding-bottom: 24px;
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+
+  @media screen and (max-width: 425px) {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+}

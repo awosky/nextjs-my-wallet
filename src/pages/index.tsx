@@ -2,16 +2,24 @@ import Head from "next/head";
 import { useContext, useEffect, useState } from "react";
 
 import Balance from "@/components/Balance";
+import Chart from "@/components/Chart";
 import Loading from "@/components/Loading";
 import Navbar from "@/components/Navbar";
-import PieChart from "@/components/PieChart";
-import Transaction from "@/components/Transaction";
+import Transactions from "@/components/Transaction";
 import { SyncContext } from "@/providers/SyncProvider";
-import { getDates, getExpenseTransactions, getTotalBalance, getTotalIncome, getTransactions } from "@/utils/storage";
+import { getDates, getExpenseTransactions, getTotalBalance, getTotalIncome, getTransactions, Transaction } from "@/utils/storage";
+
+interface Data {
+  income: number;
+  balance: number;
+  dates: string[];
+  transactions: Transaction[];
+  expenses: Transaction[];
+}
 
 export default function Home() {
   const { sync, setSync } = useContext(SyncContext);
-  const [data, setData] = useState<any>({
+  const [data, setData] = useState<Data>({
     income: 0,
     balance: 0,
     dates: [],
@@ -47,8 +55,8 @@ export default function Home() {
         <Loading isLoading={!sync}>
           <Navbar />
           <Balance income={data.income} balance={data.balance} />
-          <PieChart expense={data.expenses} />
-          <Transaction dates={data.dates} data={data.transactions} />
+          <Chart expenses={data.expenses} />
+          <Transactions dates={data.dates} data={data.transactions} />
         </Loading>
       </main>
     </>
