@@ -45,10 +45,9 @@ const BarChart = (props: Props) => {
         tooltip={false}
         xAxis={false}
         color={(d) => (CATEGOTY_PROPERTIES as CategoryProperties)[formatNewLineToSpace(d.category)]?.color}
-        barWidthRatio={1}
-        maxBarWidth={32}
+        maxBarWidth={24}
         style={{
-          padding: "16px 16px 0 16px",
+          padding: "16px",
         }}
       />
     </div>
