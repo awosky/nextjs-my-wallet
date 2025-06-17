@@ -25,7 +25,9 @@ const PieChart = (props: Props) => {
     } else {
       setData(defaultData);
     }
-  }, [defaultData, expenseData]);
+
+    return () => setCategory(defaultCategory);
+  }, [defaultData, expenseData, setCategory]);
 
   const config = {
     data,
