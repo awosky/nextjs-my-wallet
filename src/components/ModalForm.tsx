@@ -55,9 +55,11 @@ const ModalForm = (props: Props) => {
       amount: v.Amount,
     };
     item ? editTransaction(data) : saveTransaction(data);
-    form.resetFields();
     setOpen(false);
     setSync(false);
+    setTimeout(() => {
+      form.resetFields();
+    }, 500);
   };
 
   return (
