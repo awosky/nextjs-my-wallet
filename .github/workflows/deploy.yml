@@ -1,0 +1,36 @@
+name: Deploy to cPanel via SFTP
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v2
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: 🛠 Install dependencies and build
+        run: |
+          npm ci
+          npm run build
+          npm run export
+
+      - name: 📤 Deploy via SFTP (custom port)
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SFTP_HOST }}
+          username: ${{ secrets.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          port: ${{ secrets.SFTP_PORT }}
+          source: "./out/*"
+          target: "/home/${{ secrets.SFTP_USERNAME }}/wallet.faisalhakim.com"
+          strip_components: 1
