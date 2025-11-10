@@ -1,5 +1,5 @@
 import { Pie } from "@ant-design/plots";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 
 import { CategoryProperties, CATEGOTY_PROPERTIES } from "@/constants/global";
 import { CategoryContext, defaultCategory } from "@/providers/CategoryProvider";
@@ -18,6 +18,7 @@ const PieChart = (props: Props) => {
   const initialData = useMemo(() => (expenseData.length > 0 ? expenseData : defaultData), [defaultData, expenseData]);
   const [data, setData] = useState(initialData);
   const { category, setCategory } = useContext(CategoryContext);
+  const chartRef = useRef<any>(null);
 
   useEffect(() => {
     if (expenseData.length > 0) {
@@ -28,6 +29,21 @@ const PieChart = (props: Props) => {
 
     return () => setCategory(defaultCategory);
   }, [defaultData, expenseData, setCategory]);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible" && chartRef.current) {
+        try {
+          chartRef.current.forceFit?.();
+        } catch (e) {
+          console.warn("Chart resize error:", e);
+        }
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
+  }, []);
 
   const config = {
     data,
@@ -65,6 +81,7 @@ const PieChart = (props: Props) => {
         animation={{ appear: { animation: "fadeIn" } }}
         tooltip={false}
         legend={{ position: "bottom", flipPage: false, itemSpacing: 10 }}
+        onReady={(chartInstance) => (chartRef.current = chartInstance)}
         interactions={[
           { type: "element-active" },
           {
