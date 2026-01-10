@@ -1,38 +1,75 @@
 import dayjs from "dayjs";
-import * as XLSX from "xlsx";
+import ExcelJS from "exceljs";
 
 import { CATEGORY_PROPERTIES } from "@/constants/global";
 
 import { getTotalAmountByCategory, getTotalExpense, getTotalIncome, getTransactions } from "./storage";
 
-export const exportTransactionsToExcel = (): void => {
-  const worksheetData: (string | number)[][] = [
-    ["Description", "Amount"],
-    ["Total Income", getTotalIncome()],
-    ["Total Expense", getTotalExpense()],
-    [],
-    ["Description", "Amount"],
-    ...Object.keys(CATEGORY_PROPERTIES).map((category) => [category, getTotalAmountByCategory(category)]),
+export const exportTransactionsToExcel = async (): Promise<void> => {
+  const workbook = new ExcelJS.Workbook();
+
+  const summarySheet = workbook.addWorksheet("Transaction Summary");
+  summarySheet.columns = [
+    { header: "Description", key: "description", width: 25 },
+    { header: "Amount", key: "amount", width: 18 },
   ];
+  summarySheet.getRow(1).font = { bold: true };
+  summarySheet.addRow({
+    description: "Total Income",
+    amount: getTotalIncome(),
+  });
+  summarySheet.addRow({
+    description: "Total Expense",
+    amount: getTotalExpense(),
+  });
+  summarySheet.addRow({});
+  const categoryHeaderRow = summarySheet.addRow({
+    description: "Description",
+    amount: "Amount",
+  });
+  categoryHeaderRow.font = { bold: true };
+  Object.keys(CATEGORY_PROPERTIES).forEach((category) => {
+    const amount = getTotalAmountByCategory(category);
+    summarySheet.addRow({
+      description: category,
+      amount,
+    });
+  });
+  summarySheet.getColumn("amount").numFmt = "#,##0.00";
 
-  const summaryWorksheet: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(worksheetData);
+  const detailsSheet = workbook.addWorksheet("Transaction Details");
+  detailsSheet.columns = [
+    { header: "Date", key: "date", width: 18 },
+    { header: "Category", key: "category", width: 20 },
+    { header: "Description", key: "description", width: 30 },
+    { header: "Amount", key: "amount", width: 18 },
+  ];
+  detailsSheet.getRow(1).font = { bold: true };
+  detailsSheet.autoFilter = { from: "A1", to: "E1" };
+  getTransactions("ASC").forEach((t) => {
+    const row = detailsSheet.addRow({
+      date: dayjs(t.date).toDate(),
+      category: t.category,
+      description: t.description,
+      amount: t.amount,
+    });
+    const amountCell = row.getCell("amount");
+    amountCell.numFmt = "#,##0.00";
+    if (t.type === "income") {
+      amountCell.font = { color: { argb: "FF2E7D32" }, bold: true };
+    }
+    if (t.type === "expense") {
+      amountCell.font = { color: { argb: "FFC62828" }, bold: true };
+    }
+  });
 
-  const transactionsWorksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(
-    getTransactions("ASC").map((t) => ({
-      Date: t.date,
-      Type: t.type,
-      Category: t.category,
-      Description: t.description,
-      Amount: t.amount,
-    }))
-  );
-
-  const workbook: XLSX.WorkBook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(workbook, summaryWorksheet, "Transaction Summary");
-  XLSX.utils.book_append_sheet(workbook, transactionsWorksheet, "Transaction Details");
-
+  const buffer = await workbook.xlsx.writeBuffer();
+  const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
   const today = dayjs().format("YYYY-MM-DD");
   const fileName = `My Wallet Transactions ${today}.xlsx`;
-
-  XLSX.writeFile(workbook, fileName);
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = fileName;
+  link.click();
+  URL.revokeObjectURL(link.href);
 };
