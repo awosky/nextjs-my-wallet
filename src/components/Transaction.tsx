@@ -5,7 +5,7 @@ import { Fragment, useContext, useEffect, useState } from "react";
 
 import TransactionMenu from "@/components/TransactionMenu";
 import TransactionMenuItem from "@/components/TransactionMenuItem";
-import { CategoryProperties, CATEGOTY_PROPERTIES } from "@/constants/global";
+import { CATEGORY_PROPERTIES, CategoryProperties } from "@/constants/global";
 import { CategoryContext, defaultCategory } from "@/providers/CategoryProvider";
 import { formatCurrency } from "@/utils/formatter";
 import { Transaction } from "@/utils/storage";
@@ -60,9 +60,9 @@ const Transactions = (props: Props) => {
                       avatar={
                         <Avatar
                           style={{
-                            backgroundColor: (CATEGOTY_PROPERTIES as CategoryProperties)[item.category]?.color,
+                            backgroundColor: (CATEGORY_PROPERTIES as CategoryProperties)[item.category]?.color,
                           }}
-                          icon={getIcon((CATEGOTY_PROPERTIES as CategoryProperties)[item.category]?.icon)}
+                          icon={getIcon((CATEGORY_PROPERTIES as CategoryProperties)[item.category]?.icon)}
                         />
                       }
                       title={item.category}

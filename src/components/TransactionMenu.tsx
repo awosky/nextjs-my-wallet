@@ -1,8 +1,9 @@
-import { DeleteOutlined, ExclamationCircleFilled, MoreOutlined } from "@ant-design/icons";
+import { DeleteOutlined, ExclamationCircleFilled, ExportOutlined, MoreOutlined } from "@ant-design/icons";
 import { Button, Dropdown, Modal } from "antd";
 import { useContext } from "react";
 
 import { SyncContext } from "@/providers/SyncProvider";
+import { exportTransactionsToExcel } from "@/utils/exportToExcel";
 import { deleteAllTransaction } from "@/utils/storage";
 
 import style from "./TransactionMenu.module.scss";
@@ -11,6 +12,12 @@ const TransactionMenu = () => {
   const { setSync } = useContext(SyncContext);
 
   const menuItems = [
+    {
+      key: "download",
+      label: "Download as Excel",
+      icon: <ExportOutlined />,
+      onClick: () => exportTransactionsToExcel(),
+    },
     {
       key: "clear",
       label: "Clear all transactions",

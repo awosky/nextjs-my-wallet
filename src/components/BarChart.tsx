@@ -1,7 +1,7 @@
 import { Bar } from "@ant-design/plots";
 import { useEffect, useMemo, useState } from "react";
 
-import { CategoryProperties, CATEGOTY_PROPERTIES } from "@/constants/global";
+import { CATEGORY_PROPERTIES, CategoryProperties } from "@/constants/global";
 import { formatCurrency, formatNewLineToSpace, formatSpaceToNewLine } from "@/utils/formatter";
 import { Transaction } from "@/utils/storage";
 
@@ -44,7 +44,7 @@ const BarChart = (props: Props) => {
         }}
         tooltip={false}
         xAxis={false}
-        color={(d) => (CATEGOTY_PROPERTIES as CategoryProperties)[formatNewLineToSpace(d.category)]?.color}
+        color={(d) => (CATEGORY_PROPERTIES as CategoryProperties)[formatNewLineToSpace(d.category)]?.color}
         maxBarWidth={24}
         style={{
           padding: "16px",

@@ -1,7 +1,7 @@
 import { Pie } from "@ant-design/plots";
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 
-import { CategoryProperties, CATEGOTY_PROPERTIES } from "@/constants/global";
+import { CATEGORY_PROPERTIES, CategoryProperties } from "@/constants/global";
 import { CategoryContext, defaultCategory } from "@/providers/CategoryProvider";
 import { formatCurrency } from "@/utils/formatter";
 import { Transaction } from "@/utils/storage";
@@ -51,7 +51,7 @@ const PieChart = (props: Props) => {
     angleField: "value",
     color: ({ category: categoryColor }: any) => {
       const emptyColor = "#EEEEEE";
-      const elementColor = (CATEGOTY_PROPERTIES as CategoryProperties)[categoryColor]?.color;
+      const elementColor = (CATEGORY_PROPERTIES as CategoryProperties)[categoryColor]?.color;
       if (category !== defaultCategory) {
         return categoryColor === category ? elementColor : emptyColor;
       } else {

@@ -5,7 +5,7 @@ export interface CategoryProperties {
   };
 }
 
-export const CATEGOTY_PROPERTIES: CategoryProperties = {
+export const CATEGORY_PROPERTIES: CategoryProperties = {
   Zakat: { icon: "ApartmentOutlined", color: "#62DAAB" },
   Family: { icon: "TeamOutlined", color: "#6395F9" },
   "Boarding House": { icon: "HomeOutlined", color: "#657798" },

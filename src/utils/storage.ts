@@ -9,6 +9,8 @@ export interface Transaction {
   amount: number;
 }
 
+export type Sort = "ASC" | "DESC";
+
 type TransactionType = "expense" | "income";
 
 export const saveTransaction = (newTransaction: Transaction) => {
@@ -31,10 +33,10 @@ export const deleteAllTransaction = () => {
   localStorage.removeItem("transactions");
 };
 
-export const getTransactions = (): Transaction[] => {
+export const getTransactions = (sort: Sort = "DESC"): Transaction[] => {
   const transactionsData = localStorage.getItem("transactions");
   const transactions: Transaction[] = transactionsData ? JSON.parse(transactionsData) : [];
-  return transactions.sort((a, b) => dayjs(b.id).diff(dayjs(a.id)));
+  return [...transactions].sort((a, b) => (sort === "ASC" ? a.id - b.id : b.id - a.id));
 };
 
 export const getDates = (): string[] => {
@@ -44,6 +46,10 @@ export const getDates = (): string[] => {
 
 export const getTotalIncome = (): number => {
   return getTransactions().reduce((a, v) => (v.type === "income" ? a + v.amount : a), 0);
+};
+
+export const getTotalExpense = (): number => {
+  return getTransactions().reduce((a, v) => (v.type === "expense" ? a + v.amount : a), 0);
 };
 
 export const getTotalBalance = (): number => {
@@ -60,4 +66,10 @@ export const getExpenseTransactions = (): Transaction[] => {
         return [...a, { ...v, category: v.category, amount: v.amount }];
       }
     }, []);
+};
+
+export const getTotalAmountByCategory = (category: string): number => {
+  return getTransactions()
+    .filter((v) => v.category === category)
+    .reduce((a, v) => a + v.amount, 0);
 };
