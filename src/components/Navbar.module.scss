@@ -1,7 +1,22 @@
 .navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
   background: #fff;
   min-height: 80px;
   text-align: center;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0);
+  border-bottom: 1px solid rgba(240, 240, 240, 0);
+  transition: box-shadow 0.25s ease, border-bottom-color 0.25s ease;
+
+  &.scrolled {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    border-bottom-color: #f0f0f0;
+  }
+
+  :global(.ant-typography) {
+    margin: 0;
+  }
 
   .logo {
     border-radius: 100px;
